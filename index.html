@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Acompanhamento de Ações SEO</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<div class="wrap">
+
+  <!-- ============================== Cabeçalho ============================== -->
+  <header class="dashboard-header">
+    <div>
+      <h1 class="dashboard-header__title">Acompanhamento de Ações SEO</h1>
+      <p class="dashboard-header__subtitle">Visão consolidada das ações, evolução e prioridades</p>
+    </div>
+    <div class="dashboard-header__meta">
+      <span id="last-updated">—</span>
+      <button id="refresh-btn" class="btn btn--primary">Atualizar dados</button>
+    </div>
+  </header>
+
+  <div id="status-banner" class="status-banner" hidden></div>
+
+  <!-- ================================ Filtros ================================ -->
+  <div class="filters">
+    <select id="filter-produto" aria-label="Filtrar por produto"><option value="">Todos os produtos</option></select>
+    <select id="filter-mes" aria-label="Filtrar por mês"><option value="">Todos os meses</option></select>
+    <select id="filter-status" aria-label="Filtrar por status"><option value="">Todos os status</option></select>
+    <select id="filter-prioridade" aria-label="Filtrar por prioridade"><option value="">Todas as prioridades</option></select>
+    <select id="filter-impacto" aria-label="Filtrar por impacto"><option value="">Todos os impactos</option></select>
+    <select id="filter-categoria" aria-label="Filtrar por categoria"><option value="">Todas as categorias</option></select>
+    <button id="clear-filters-btn" class="btn btn--ghost">Limpar filtros</button>
+  </div>
+
+  <div id="empty-state" class="empty-state" hidden>
+    Nenhuma ação encontrada para os filtros selecionados.
+  </div>
+
+  <!-- ============================== KPIs principais ============================== -->
+  <section aria-labelledby="kpi-title">
+    <h2 id="kpi-title" class="section-title">Resumo executivo</h2>
+    <div id="kpi-cards"></div>
+    <div class="overall-progress">
+      <div class="overall-progress__track">
+        <div id="overall-progress-bar" class="overall-progress__fill" style="width:0%"></div>
+      </div>
+      <span id="overall-progress-label">0% concluído</span>
+    </div>
+  </section>
+
+  <!-- ============================== Visão por produto ============================== -->
+  <section aria-labelledby="product-title">
+    <h2 id="product-title" class="section-title">Visão por produto</h2>
+    <div id="product-grid"></div>
+  </section>
+
+  <!-- ============================== O que foi feito / falta ============================== -->
+  <section class="two-col" aria-label="Entregas e próximas ações">
+    <div class="panel">
+      <h2 class="section-title">O que foi feito</h2>
+      <div id="delivered-list"></div>
+    </div>
+    <div class="panel">
+      <h2 class="section-title">Próximas ações</h2>
+      <div id="next-list"></div>
+    </div>
+  </section>
+
+  <!-- ============================== Gráficos ============================== -->
+  <section class="charts-row" aria-label="Evolução e distribuição">
+    <div class="chart-card">
+      <h2 class="section-title">Ações por mês</h2>
+      <div class="chart-card__canvas-wrap"><canvas id="evolution-chart"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <h2 class="section-title">Distribuição por status</h2>
+      <div class="chart-card__canvas-wrap"><canvas id="status-chart"></canvas></div>
+    </div>
+  </section>
+
+  <!-- ============================== Destaques ============================== -->
+  <section aria-labelledby="highlights-title">
+    <h2 id="highlights-title" class="section-title">Destaques</h2>
+    <ul id="highlights-list"></ul>
+  </section>
+
+  <!-- ============================== Tabela detalhada ============================== -->
+  <section class="table-section" aria-labelledby="table-title">
+    <button id="table-toggle" class="table-toggle" aria-expanded="false" aria-controls="table-wrap">
+      <span id="table-toggle-icon">▸</span>
+      <span id="table-title">Ver todas as ações</span>
+    </button>
+    <div id="table-wrap" class="table-body-wrap" hidden>
+      <div class="table-controls">
+        <input id="table-search" type="search" placeholder="Buscar por ação, produto, responsável…" />
+        <div class="table-pagination">
+          <button id="table-prev" class="btn btn--ghost">Anterior</button>
+          <span id="table-page-info"></span>
+          <button id="table-next" class="btn btn--ghost">Próxima</button>
+        </div>
+      </div>
+      <div class="table-scroll">
+        <table id="action-table">
+          <thead>
+            <tr>
+              <th data-sort="action">Ação</th>
+              <th data-sort="category">Categoria</th>
+              <th data-sort="product">Produto</th>
+              <th data-sort="month">Mês</th>
+              <th data-sort="status">Status</th>
+              <th data-sort="owner">Responsável</th>
+              <th data-sort="priority">Prioridade</th>
+              <th data-sort="effort">Esforço</th>
+              <th data-sort="impact">Impacto</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <footer class="dashboard-footer">
+    Fonte de dados: Google Sheets · configuração em <code>js/data.js</code>
+  </footer>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
